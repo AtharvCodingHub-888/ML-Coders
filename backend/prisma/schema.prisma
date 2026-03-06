@@ -1,0 +1,30 @@
+generator client {
+  provider = "prisma-client-js"
+}
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        String         @id @default(uuid())
+  email     String         @unique
+  username  String
+  totalXp   Int            @default(0) // Gamification core
+  progress  UserProgress[]
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+}
+
+model UserProgress {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  courseSlug  String   // e.g., "supervised-learning", "neural-networks"
+  phaseId     Int      // The specific phase (1-12) they completed
+  isCompleted Boolean  @default(true)
+  xpEarned    Int      @default(10) // XP awarded for this specific phase
+  completedAt DateTime @default(now())
+
+  // A user can only complete a specific phase in a specific course once
+  @@unique([userId, courseSlug, phaseId])
+}
