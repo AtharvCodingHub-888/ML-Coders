@@ -58,9 +58,10 @@ export function useProgressTracking(courseSlug: string, totalPhases: number) {
                         .eq("completed", true)
                         .then(({ data: progressData }) => {
                             if (progressData) {
+                                // Assume phaseIds maps phaseNumber - 1 to phase_id
                                 const completed = progressData.map((p) => {
-                                    const idx = phasesData?.findIndex(ph => ph.id === p.phase_id);
-                                    return idx !== undefined && idx >= 0 ? idx + 1 : -1;
+                                    const idx = phaseIds.findIndex(id => id === p.phase_id);
+                                    return idx !== -1 ? idx + 1 : -1;
                                 }).filter(n => n > 0);
                                 setCompletedPhases(completed);
                             }

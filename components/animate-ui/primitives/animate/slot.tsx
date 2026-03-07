@@ -85,7 +85,6 @@ function Slot<T extends HTMLElement = HTMLElement>({
     const mergedProps = mergeProps(childProps, props);
 
     return (
-        // @ts-expect-error - Base component ref type can't be statically inferred correctly with Framer Motion 12 + React 19
         <Base {...mergedProps} ref={mergeRefs(childRef as React.Ref<T>, ref) as any} />
     );
 }
